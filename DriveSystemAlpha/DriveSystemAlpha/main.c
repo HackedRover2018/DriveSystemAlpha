@@ -26,11 +26,12 @@ int main (void)
 	// Initialize
 	CURRENT_COMMAND.mag = 0.0;
 	CURRENT_COMMAND.dir = 0.0;
+    struct motor_levels motor_output;
 	
 	setup_pins();
 	avr_timer_init();
 	uart_init();
-	//uart_set_io_streams(stdin, stdout);
+	uart_set_io_streams(stdin, stdout);
     stdin = &uart_input;
     stdout =  &uart_output;
 	
@@ -42,9 +43,16 @@ int main (void)
 	{
 		while(LOOP_RUN_FLAG == 0);
 		LOOP_RUN_FLAG = 0;
+        
+        // Compute skid steer levels
+        motor_output = compute_levels(CURRENT_COMMAND);
+        // Set timer compare register
+        
+        
+        
         // TODO: CURRENT_COMMAND is set in the interrupt handler, refactor that to set it here and make it not global
 		printf("mag: %i, dir %i\n", (int) CURRENT_COMMAND.mag, (int) CURRENT_COMMAND.dir);
-        
+        PORTB ^= _BV(PORTB7);
 	}
 }
 
@@ -68,6 +76,7 @@ ISR(USART0_RX_vect)
 		command_to_polar(INPUT_COMMAND_STRING, &CURRENT_COMMAND);
 		memset(INPUT_COMMAND_STRING, 0, sizeof(INPUT_COMMAND_STRING));
 	}
+    LOOP_RUN_FLAG = 1;
 }
 
 // Timer interrupt

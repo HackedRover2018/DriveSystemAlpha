@@ -14,3 +14,16 @@ void avr_timer_init()
     TCCR2A |= _BV(WGM10); // set PWN Phase Corrected
     TCCR2B |= _BV(CS21); // set pre-scaler to 8 and starts PWM
 }
+
+void avr_timer_one_init()
+{
+    //Timer 1
+    //=============================================
+    // set none-inverting mode
+    TCCR1A |= _BV(COM1A1) | _BV(COM1B1);
+    // set PWN Phase Corrected
+    TCCR1A |= _BV(WGM10);
+    // set pre-scaler to 8 and starts PWM
+    TCCR1B |= _BV(CS11);
+    //=============================================
+}
