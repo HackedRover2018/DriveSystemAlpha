@@ -12,6 +12,8 @@
 
 #define TIMER_PRESCALE 10
 
-void avr_timer_init();
+void avr_interrupt_timer_init();
+
+void avr_pwm_timer_init();
 
 #endif /* TIMER_SPEAR_H_ */
